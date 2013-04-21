@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="jp.gr.java_conf.tomoyorn.locationalarm"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="15" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name="com.activeandroid.app.Application"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="LocationAlarm.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" />
+
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
+            android:name="jp.gr.java_conf.tomoyorn.locationalarm.AlarmListActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="jp.gr.java_conf.tomoyorn.locationalarm.DestinationSelectionActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="jp.gr.java_conf.tomoyorn.locationalarm.SettingsActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="jp.gr.java_conf.tomoyorn.locationalarm.AlarmEditActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="jp.gr.java_conf.tomoyorn.locationalarm.AlarmStopConfirmationActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+
+        <receiver android:name="jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertReceiver" >
+        </receiver>
+
+        <service android:name="jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertService" >
+        </service>
+    </application>
+
+</manifest>
