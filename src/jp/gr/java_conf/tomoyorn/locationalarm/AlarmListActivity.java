@@ -1,7 +1,11 @@
 package jp.gr.java_conf.tomoyorn.locationalarm;
 
 import android.app.ListActivity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,8 +13,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.activeandroid.query.Select;
 
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
 import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
@@ -22,6 +24,9 @@ import java.util.ArrayList;
 public class AlarmListActivity extends ListActivity {
 
     private static final String TAG = "AlarmListActivity";
+
+    private NotificationManager mNotificationManager;
+    private LocationManager mLocationManager;
 
     // private ListView mAlarmListView;
     // private ArrayAdapter<Alarm> mAdapter; // TODO
@@ -36,17 +41,9 @@ public class AlarmListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_list);
 
-        // ArrayList<Alarm> mAlarms = new ArrayList<Alarm>();
-        // ArrayAdapter<Alarm> mAdapter = new ArrayAdapter<Alarm>(this,
-        // android.R.layout.simple_list_item_activated_1, mAlarms);
-        // mAlarmListView = getListView();
-        // mAlarmListView.setAdapter(mAdapter);
-        // mAlarmListView.setItemsCanFocus(false);
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        // refresh();
-        // TODO [優先度低] 画面がバックグラウンドから復帰するたびに位置らか作りなおすのがなんか不毛。
-        // 選択の状態もリセット視されてしまうし。設定画面での初期化があるからこうせざるをえない。
-        // →ま、実装がシンプルになるのでこのままでも良いか
         setupView();
     }
 
@@ -115,14 +112,6 @@ public class AlarmListActivity extends ListActivity {
                 // TODO すでに起動しているアラームが存在していた場合はダイアログを出し確認する
             }
             startAlarm(alarm);
-            notiryStartAlarm(alarm);
-            Toast.makeText(
-                    this,
-                    getString(R.string.message_started_alarm, alarm.getLavel()),
-                    Toast.LENGTH_LONG).show();
-            // Toast.makeText(this,
-            // "アラーム「" + alarm.getLavel() + "」を開始しました。",
-            // Toast.LENGTH_LONG).show();
             finish();
             return true;
         case R.id.menu_add_alarm:
@@ -143,6 +132,48 @@ public class AlarmListActivity extends ListActivity {
             Log.w("Unknown selected menu"); // TODO あり得ないのでアサーションエラーかな？
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void startAlarm(Alarm alarm) {
+        Toast.makeText(
+                this,
+                getString(R.string.message_started_alarm, alarm.getLavel()),
+                Toast.LENGTH_LONG).show();
+        showNotification(alarm);
+//        addProximityAlert(alarm); // TODO 後で
+    }
+
+    @SuppressWarnings("deprecation")
+    private void showNotification(Alarm alarm) {
+        // TODO titleもmessageも文字列が長いと見きれてしまう。折り返しか改行できないか
+        String title = getString(R.string.app_name) + ": " + alarm.getLavel();
+        String message = "アラームを開始しました。アラームを停止する場合に選択します。"; // TODO リソースへ
+        String ticker = title;
+
+        Notification notification = new Notification(R.drawable.ic_launcher,
+                ticker, System.currentTimeMillis());
+        notification.flags = notification.flags
+                | Notification.FLAG_NO_CLEAR
+                | Notification.FLAG_ONGOING_EVENT;
+        Intent intent = new Intent(this, AlarmStopConfirmationActivity.class)
+                .putExtra("alarm.id", alarm.getId());
+        notification.setLatestEventInfo(this, title, message,
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        mNotificationManager.notify(alarm.hashCode(), notification);
+    }
+
+    private void addProximityAlert(Alarm alarm) {
+        double[] shinjyuku = { 35.690921, 139.700258 }; // 新宿駅
+        double latitude = shinjyuku[0];
+        double longitude = shinjyuku[1];
+        float radius = 1 * 1000; // meter
+        long noExpiration = -1;
+
+        Intent intent = new Intent(this, ProximityAlertReceiver.class)
+                .putExtra("alarm.id", alarm.getId());
+        mLocationManager.addProximityAlert(latitude, longitude, radius, noExpiration,
+                PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     private boolean existsAlreadyStartedAlarm() {
@@ -290,65 +321,5 @@ public class AlarmListActivity extends ListActivity {
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
-    }
-
-    // private Alarm selectedAlarm() {
-    // // TODO アラーム一覧で選択されているAlarmを返す。
-    // return new Alarm();
-    // }
-
-    private void startAlarm(Alarm alarm) {
-        // ArrayList<Alarm> alarms = new Select() // TODO こういうのはAlarmsクラスに閉じ込める
-        // .from(Alarm.class)
-        // .where("Enabled = ?", true)
-        // .execute();
-        // for (Alarm a : alarms) {
-        // a.setEnabled(false);
-        // a.save();
-        // }
-        // alarm.setEnabled(true);
-        // TODO サービスを起動する
-
-        // TODO 未実装
-        // LocationManager lm = (LocationManager)
-        // getSystemService(LOCATION_SERVICE);
-        // double latitude = (double) alarm.getDestination().getLatitudeE6() /
-        // 1E6;
-        // double longitude = (double) alarm.getDestination().getLongitudeE6() /
-        // 1E6;
-        // float radius = alarm.getNotificationDistance() * 1000;
-        // PendingIntent intent = PendingIntent.getBroadcast(this,
-        // 0,
-        // new Intent(this, ProximityAlertReceiver.class),
-        // 0);
-        // long noExpiration = -1;
-        // lm.addProximityAlert(latitude, longitude, radius, noExpiration ,
-        // intent);
-    }
-
-    private void notiryStartAlarm(Alarm alarm) {
-        // TODO 未実装
-        // long when = System.currentTimeMillis();
-        // Notification notification = new Notification(R.drawable.icon,
-        // "アラーム「" + alarm.getLavel() + "」を開始しました。", when); // TODO strings.xmlへ
-        // // 「通知を消去」による消去を抑制
-        // notification.flags = Notification.FLAG_ONGOING_EVENT;
-        //
-        // Intent intent = new Intent(this,
-        // AlarmStopConfirmationActivity.class);
-        // // 最近起動したアクティビティのリストに表示しない
-        // intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        // intent.putExtra("alarm.id", alarm.getId());
-        // PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-        // intent, 0);
-        // notification.setLatestEventInfo(this, getString(R.string.app_name),
-        // "アラーム「" + alarm.getLavel() + "」を停止する場合に選択します。", // TODO strings.xmlへ
-        // contentIntent);
-        //
-        // NotificationManager nm = (NotificationManager)
-        // getSystemService(NOTIFICATION_SERVICE);
-        // int id = alarm.getId(); // TODO
-        // アラームIDを使用することで複数のアラームを並行して開始可能になった。でも上限はあったほうがいいな
-        // nm.notify(id , notification);
     }
 }

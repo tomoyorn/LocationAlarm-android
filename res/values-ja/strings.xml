@@ -37,7 +37,7 @@
     <string name="settings_alarm_distance_summary">通知距離の初期値を設定する（km）</string>
 
     <!-- メッセージ -->
-    <string name="message_started_alarm">アラーム「%1」を開始しました。</string>
+    <string name="message_started_alarm">アラーム「%1$s」を開始しました。</string>
     <string name="message_confirm_restoration">アラーム設定はすべて削除され、元に戻すことはできなくなります。初期化してもよろしいですか？</string>
 
 </resources>
