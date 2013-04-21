@@ -7,6 +7,7 @@ import com.activeandroid.query.Delete;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,12 @@ public class Alarm extends Model {
 
     @Column(name = "LongitudeE6")
     private int longitudeE6;
+
+    @Column(name = "Distance")
+    private int distance;
+
+    @Column(name = "Duration")
+    private int duration;
 
     public String getLavel() {
         return lavel;
@@ -121,6 +128,44 @@ public class Alarm extends Model {
     }
 
     /**
+     * 近接アラートを通知する距離を設定します（km）。
+     *
+     * @param distance 近接アラートを通知する距離
+     */
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    /**
+     * 近接アラートを通知する距離を返します（km）。
+     *
+     * @return 近接アラートを通知する距離
+     */
+    public int getDistance() {
+        return distance;
+    }
+
+    /**
+     *
+     * 近接アラートを鳴らし続ける時間を設定します（分）。
+     *
+     * @param duration 近接アラートを鳴らし続ける時間
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    /**
+     *
+     * 近接アラートを鳴らし続ける時間を返します（分）。
+     *
+     * @return 近接アラートを鳴らし続ける時間
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    /**
      * 自動でラベルを設定します。
      */
     public void autoLavel() {
@@ -155,7 +200,6 @@ public class Alarm extends Model {
     }
 
     public String dump() {
-        return "Alarm [lavel=" + lavel + ", latitudeE6=" + latitudeE6
-                + ", longitudeE6=" + longitudeE6 + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 }

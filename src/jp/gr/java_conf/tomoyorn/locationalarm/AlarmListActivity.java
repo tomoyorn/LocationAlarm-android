@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -58,7 +59,6 @@ public class AlarmListActivity extends ListActivity {
         ListView mAlarmListView = getListView();
         setListAdapter(mAdapter);
         mAlarmListView.setItemsCanFocus(false);
-
     }
 
     private void refreshView() {
@@ -95,7 +95,7 @@ public class AlarmListActivity extends ListActivity {
         case R.id.menu_start_alarm:
             Validate.notNull(alarm, "Alarm must not be null.");
             if (existsAlreadyStartedAlarm()) {
-                // TODO すでに起動しているアラームが存在していた場合はダイアログを出し確認する
+                // TODO すでに起動しているアラームが存在していた場合はダイアログを出して確認する
             }
             startAlarm(alarm);
             finish();
@@ -162,7 +162,7 @@ public class AlarmListActivity extends ListActivity {
     private void addProximityAlert(Alarm alarm) {
         double latitude = alarm.getLatitude();
         double longitude = alarm.getLongitude();
-        float radius = 1 * 1000; // meter // TODO alarmクラスから取得する
+        int radius =  alarm.getDistance() * 1000;
         long noExpiration = -1;
 
         Intent intent = new Intent(this, ProximityAlertReceiver.class)
@@ -189,11 +189,12 @@ public class AlarmListActivity extends ListActivity {
                         DestinationSelectionActivity.EXTRA_LONGITUDE_E6);
 
                 Alarm alarm = new Alarm();
-                // alarm.setAddress(address);
+                // alarm.setAddress(address); // TODO 将来、MAPから住所を取得するようにしたい
                 alarm.setLavel(address);
-                // TODO 通知距離などの設定
                 alarm.setLatitudeE6(latitudeE6);
                 alarm.setLongitudeE6(longitudeE6);
+                alarm.setDistance(getDefaultDistance()); // TODO アラーム編集画面で個別に指定できるようにする
+                alarm.setDuration(getDefaultDuration()); // TODO アラーム編集画面で個別に指定できるようにする
                 alarm.autoLavel();
                 alarm.save();
                 Log.d(TAG, "Created the alarm settings.: " + alarm.dump());
@@ -226,5 +227,17 @@ public class AlarmListActivity extends ListActivity {
     private void startSettingsActivity() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private int getDefaultDistance() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getInt(
+                SettingsActivity.KEY_ALARM_DISTANCE,
+                R.string.default_alarm_distance);
+    }
+
+    private int getDefaultDuration() {
+        return PreferenceManager.getDefaultSharedPreferences(this).getInt(
+                SettingsActivity.KEY_ALARM_DURATION,
+                R.string.default_alarm_duration);
     }
 }

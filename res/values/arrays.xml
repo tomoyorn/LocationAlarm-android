@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="alarm_time">
+    <string-array name="alarm_duration">
         <item>1</item>
         <item>5</item>
         <item>10</item>

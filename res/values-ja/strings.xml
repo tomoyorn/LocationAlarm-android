@@ -2,8 +2,8 @@
 <resources>
 
     <!-- アプリケーション全般 -->
-<!--     <string name="ok">OK</string> -->
-<!--     <string name="cancel">キャンセル</string> -->
+    <string name="default_alarm_distance">1</string>
+    <string name="default_alarm_duration">1</string>
 
     <!-- アラーム一覧画面 -->
     <string name="empty_alarm_list">アラームが登録されていません。</string>
@@ -14,31 +14,26 @@
     <string name="menu_preferences">設定</string>
 
     <!-- 目的地選択画面 -->
-    <string name="menu_current_location">現在地</string>
+    <string name="menu_my_location">現在地</string>
     <string name="menu_search_location">検索</string>
 
     <!-- アラーム編集画面 -->
     <string name="hint_destination">目的地</string>
     <string name="button_destination">MAP</string>
     <string name="hint_label">ラベル</string>
-<!--     <string name="alarm_detail_destination_title">目的地</string> -->
-<!--     <string name="alarm_detail_destination_summary">目的地の座標を設定する</string> -->
-<!--     <string name="alarm_detail_label_title">ラベル</string> -->
-<!--     <string name="alarm_detail_label_summary">ラベルを設定する</string> -->
 
     <!-- 設定画面 -->
     <string name="settings_general">全般設定</string>
-    <string name="settings_alarm_time_title">通知時間</string>
-    <string name="settings_alarm_time_summary">アラームを鳴らし続ける時間を設定する（分）</string>
     <string name="settings_restore_title">初期化</string>
     <string name="settings_restore_summary">アプリケーションを初期化する</string>
     <string name="settings_default">初期値設定</string>
     <string name="settings_alarm_distance_title">通知距離</string>
-    <string name="settings_alarm_distance_summary">通知距離の初期値を設定する（km）</string>
+    <string name="settings_alarm_distance_summary">近接アラートを通知する距離の初期値を設定する（km）</string>
+    <string name="settings_alarm_duration_title">通知時間</string>
+    <string name="settings_alarm_duration_summary">近接アラートを鳴らし続ける時間を設定する（分）</string>
 
     <!-- メッセージ -->
     <string name="message_started_alarm">アラーム「%1$s」を開始しました。</string>
     <string name="message_confirm_restoration">アラーム設定はすべて削除され、元に戻すことはできなくなります。初期化してもよろしいですか？</string>
 
 </resources>
-

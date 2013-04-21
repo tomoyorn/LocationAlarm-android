@@ -80,7 +80,7 @@ public class ProximityAlertService extends Service {
     @SuppressWarnings("deprecation")
     private void showNotification(Alarm alarm) {
         String title = getString(R.string.app_name) + ": " + alarm.getLavel();
-        String message = "アラームは10分間鳴って停止しました。";
+        String message = "アラームは" + alarm.getDuration() + "分間鳴って停止しました。";
         String ticker = title;
 
         Notification notification = new Notification(R.drawable.ic_launcher,
@@ -100,7 +100,7 @@ public class ProximityAlertService extends Service {
             @Override
             public void run() {
                 mVibrator.vibrate(pattern, infinite);
-                long timeout =1 * 60 * 1000; // milliseconds
+                long timeout = alarm.getDuration() * 60 * 1000; // milliseconds
                 boolean isTimeout = !mCondition.block(timeout);
                 stopAlert(alarm);
                 if (isTimeout) {
