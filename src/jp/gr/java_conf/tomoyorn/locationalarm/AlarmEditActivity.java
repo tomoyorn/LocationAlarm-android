@@ -24,7 +24,7 @@ public class AlarmEditActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_edit);
 
-        mAlarm = Alarm.load(Alarm.class, getIntent().getExtras().getLong(EXTRA_ALARM_ID));
+        mAlarm = Alarm.find(getIntent().getExtras().getLong(EXTRA_ALARM_ID));
         mEditTextDestination = (EditText) findViewById(R.id.edit_text_destination);
         mEditTextDestination.setText(toDisplayLatitudeAndLongitude(mAlarm.getLatitudeE6(), mAlarm.getLongitudeE6()));
         mEditTextLabel = (EditText) findViewById(R.id.edit_text_label);
