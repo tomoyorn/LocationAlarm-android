@@ -189,7 +189,7 @@ public class AlarmListActivity extends ListActivity {
                         DestinationSelectionActivity.EXTRA_LONGITUDE_E6);
 
                 Alarm alarm = new Alarm();
-                // alarm.setAddress(address); // TODO 将来、MAPから住所を取得するようにしたい
+                // alarm.setAddress(address); // TODO 将来、MAPから住所を取得できるようにしたい
 //                alarm.setLavel(address);
                 alarm.setLatitudeE6(latitudeE6);
                 alarm.setLongitudeE6(longitudeE6);
@@ -235,14 +235,16 @@ public class AlarmListActivity extends ListActivity {
     }
 
     private int getDefaultDistance() {
+        // XXX このクラスが持つメソッドではないような...
+        int defValue = Integer.valueOf(getString(R.string.default_alarm_distance));
         return PreferenceManager.getDefaultSharedPreferences(this).getInt(
-                SettingsActivity.KEY_ALARM_DISTANCE,
-                R.string.default_alarm_distance);
+                SettingsActivity.KEY_ALARM_DISTANCE, defValue);
     }
 
     private int getDefaultDuration() {
+        // XXX このクラスが持つメソッドではないような...
+        int defValue = Integer.valueOf(getString(R.string.default_alarm_duration));
         return PreferenceManager.getDefaultSharedPreferences(this).getInt(
-                SettingsActivity.KEY_ALARM_DURATION,
-                R.string.default_alarm_duration);
+                SettingsActivity.KEY_ALARM_DURATION, defValue);
     }
 }
