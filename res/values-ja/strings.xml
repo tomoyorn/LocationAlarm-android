@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
+    <!-- TODO values/strings.xml英訳する -->
 
     <!-- アプリケーション全般 -->
     <string name="default_alarm_distance">1</string>
@@ -14,6 +16,7 @@
     <string name="menu_preferences">設定</string>
 
     <!-- 目的地選択画面 -->
+    <string name="maps_api_key">0mmm3khxSiOYfGi4CuOR43cR5mZst9YIeVLQVeA</string>
     <string name="menu_my_location">現在地</string>
     <string name="menu_search_location">検索</string>
 

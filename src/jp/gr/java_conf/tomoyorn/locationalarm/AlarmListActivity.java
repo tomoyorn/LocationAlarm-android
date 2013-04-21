@@ -101,7 +101,7 @@ public class AlarmListActivity extends ListActivity {
             finish();
             return true;
         case R.id.menu_add_alarm:
-            startDestinationSelectionActivity();
+            startDestinationSelectionActivity(alarm);
             return true;
         case R.id.menu_edit_alarm:
             Validate.notNull(alarm, "Alarm must not be null!");
@@ -181,8 +181,8 @@ public class AlarmListActivity extends ListActivity {
         Log.d(TAG, "onActivityResult()");
         if (requestCode == DestinationSelectionActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                String address = data.getExtras().getString(
-                        DestinationSelectionActivity.EXTRA_ADDRESS);
+//                String address = data.getExtras().getString(
+//                        DestinationSelectionActivity.EXTRA_ADDRESS);
                 int latitudeE6 = data.getExtras().getInt(
                         DestinationSelectionActivity.EXTRA_LATITUDE_E6);
                 int longitudeE6 = data.getExtras().getInt(
@@ -190,7 +190,7 @@ public class AlarmListActivity extends ListActivity {
 
                 Alarm alarm = new Alarm();
                 // alarm.setAddress(address); // TODO 将来、MAPから住所を取得するようにしたい
-                alarm.setLavel(address);
+//                alarm.setLavel(address);
                 alarm.setLatitudeE6(latitudeE6);
                 alarm.setLongitudeE6(longitudeE6);
                 alarm.setDistance(getDefaultDistance()); // TODO アラーム編集画面で個別に指定できるようにする
@@ -206,15 +206,20 @@ public class AlarmListActivity extends ListActivity {
         }
     }
 
-    private void startDestinationSelectionActivity() {
+    private void startDestinationSelectionActivity(Alarm alarm) {
         Intent intent = new Intent(this, DestinationSelectionActivity.class);
+        if (alarm != null) {
+            intent.putExtra(DestinationSelectionActivity.EXTRA_LATITUDE_E6, alarm.getLatitudeE6());
+            intent.putExtra(DestinationSelectionActivity.EXTRA_LONGITUDE_E6, alarm.getLongitudeE6());
+        }
         startActivityForResult(intent,
                 DestinationSelectionActivity.REQUEST_CODE);
     }
 
     private void startAlarmEditActivity(Alarm alarm) {
-        Intent intent = new Intent(this, AlarmEditActivity.class);
-        intent.putExtra(AlarmEditActivity.EXTRA_ALARM_ID, alarm.getId());
+        Intent intent = new Intent(this, AlarmEditActivity.class).putExtra(
+                "alarm.id", alarm.getId());
+        intent.putExtra("alarm.id", alarm.getId());
         startActivity(intent);
     }
 

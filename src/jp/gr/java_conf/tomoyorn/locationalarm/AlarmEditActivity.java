@@ -18,8 +18,6 @@ public class AlarmEditActivity extends Activity {
 
     private static final String TAG = "AlarmEditActivity";
 
-    public static final String EXTRA_ALARM_ID = "EXTRA_ALARM_ID";
-
     private EditText mEditTextLabel;
     private EditText mEditTextDestination;
 
@@ -31,7 +29,7 @@ public class AlarmEditActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_edit);
 
-        mAlarm = Alarm.find(getIntent().getExtras().getLong(EXTRA_ALARM_ID));
+        mAlarm = Alarm.find(getIntent().getExtras().getLong("alarm.id"));
         mEditTextDestination = (EditText) findViewById(R.id.edit_text_destination);
         mEditTextDestination.setText(toDisplayLatitudeAndLongitude(
                 mAlarm.getLatitudeE6(), mAlarm.getLongitudeE6()));
