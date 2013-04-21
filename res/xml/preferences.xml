@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/settings_general" >
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="@string/settings_alarm_time_title"
+            android:enabled="true"
+            android:entries="@array/alarm_time"
+            android:entryValues="@array/alarm_time"
+            android:key="alarm_time"
+            android:selectable="true"
+            android:summary="@string/settings_alarm_time_summary"
+            android:title="@string/settings_alarm_time_title" >
+        </ListPreference>
+        <jp.gr.java_conf.tomoyorn.locationalarm.preference.RestorePreference
+            android:key="restore"
+            android:title="@string/settings_restore_title"
+            android:summary="@string/settings_restore_summary"
+            >
+        </jp.gr.java_conf.tomoyorn.locationalarm.preference.RestorePreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_default" >
+        <ListPreference
+            android:defaultValue="1"
+            android:dialogTitle="@string/settings_alarm_distance_title"
+            android:enabled="true"
+            android:entries="@array/alarm_distance"
+            android:entryValues="@array/alarm_distance"
+            android:key="alarm_distance"
+            android:selectable="true"
+            android:summary="@string/settings_alarm_distance_summary"
+            android:title="@string/settings_alarm_distance_title" >
+        </ListPreference>
+    </PreferenceCategory>
+
+</PreferenceScreen>
