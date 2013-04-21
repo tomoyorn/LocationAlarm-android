@@ -44,7 +44,7 @@ public class ProximityAlertReceiver extends BroadcastReceiver {
     @SuppressWarnings("deprecation")
     private void showNotification(Alarm alarm, Context context) {
         String title = context.getString(R.string.app_name) + ": " + alarm.getLavel();
-        String message = "目的地周辺に到着しました。アラームを停止する場合に選択します。";
+        String message = "目的地周辺に到着しました。アラームを停止する場合に選択します。"; // TODO リソースへ
         String ticker = title;
 
         Notification notification = new Notification(R.drawable.ic_launcher,

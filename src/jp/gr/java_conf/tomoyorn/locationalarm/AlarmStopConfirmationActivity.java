@@ -34,7 +34,7 @@ public class AlarmStopConfirmationActivity extends Activity {
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         mText = (TextView) findViewById(R.id.text);
         Alarm alarm = Alarm.find(getIntent().getExtras().getLong("alarm.id"));
-        mText.setText("アラーム「" + alarm.getLavel() + "」を停止します。");
+        mText.setText("アラーム「" + alarm.getLavel() + "」を停止します。"); // TODO リソースへ
     }
 
     // Callback method for the ok button.

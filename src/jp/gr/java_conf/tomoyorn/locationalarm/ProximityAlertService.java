@@ -80,7 +80,7 @@ public class ProximityAlertService extends Service {
     @SuppressWarnings("deprecation")
     private void showNotification(Alarm alarm) {
         String title = getString(R.string.app_name) + ": " + alarm.getLavel();
-        String message = "アラームは" + alarm.getDuration() + "分間鳴って停止しました。";
+        String message = "アラームは" + alarm.getDuration() + "分間鳴って停止しました。"; // TODO リソースへ
         String ticker = title;
 
         Notification notification = new Notification(R.drawable.ic_launcher,
