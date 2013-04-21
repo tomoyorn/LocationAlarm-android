@@ -11,7 +11,11 @@ import android.location.LocationManager;
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
 import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
 
-// TODO ProximityAlertServerのネストクラスとして定義することを検討する
+/**
+ * 近接アラートを受信するBroadcastReceiverです。
+ *
+ * @author tomoyorn
+ */
 public class ProximityAlertReceiver extends BroadcastReceiver {
 
     private static final String TAG = "ProximityAlertReceiver";
@@ -21,9 +25,9 @@ public class ProximityAlertReceiver extends BroadcastReceiver {
         Log.d(TAG, "Start onReceive()");
         boolean isEntering = intent.getExtras().getBoolean(
                 LocationManager.KEY_PROXIMITY_ENTERING);
-//        if (!isEntering) { // TODO どちらが精度が良いのだろうか？
-//            return;
-//        }
+        if (!isEntering) { // TODO 感度が悪くなってしまうようなら削除する
+            return;
+        }
 
         Alarm alarm = Alarm.find(intent.getExtras().getLong("alarm.id"));
         showNotification(alarm, context);
@@ -51,7 +55,7 @@ public class ProximityAlertReceiver extends BroadcastReceiver {
         notification.defaults = Notification.DEFAULT_ALL;
         Intent intent = new Intent(context, ProximityAlertService.class)
             .putExtra("alarm.id", alarm.getId())
-            .putExtra("action.stop", true); // TODO Intent.ACTIONについて調べてみる
+            .putExtra("action.stop", true); // TODO Intent.ACTIONを使ったほうが良い？
         notification.setLatestEventInfo(context, title, message,
                 PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
 

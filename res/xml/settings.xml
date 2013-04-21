@@ -13,11 +13,11 @@
             android:summary="@string/settings_alarm_time_summary"
             android:title="@string/settings_alarm_time_title" >
         </ListPreference>
+
         <jp.gr.java_conf.tomoyorn.locationalarm.preference.RestorePreference
             android:key="restore"
-            android:title="@string/settings_restore_title"
             android:summary="@string/settings_restore_summary"
-            >
+            android:title="@string/settings_restore_title" >
         </jp.gr.java_conf.tomoyorn.locationalarm.preference.RestorePreference>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/settings_default" >

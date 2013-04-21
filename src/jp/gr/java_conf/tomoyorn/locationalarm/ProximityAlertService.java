@@ -1,21 +1,23 @@
 package jp.gr.java_conf.tomoyorn.locationalarm;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.ConditionVariable;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.widget.Toast;
 
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
 import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
 
+/**
+ * 近接アラートを鳴らすServiceです。
+ *
+ * @author tomoyorn
+ */
 public class ProximityAlertService extends Service {
 
     private static final String TAG = "ProximityAlertService";
@@ -36,11 +38,11 @@ public class ProximityAlertService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Start onStartCommand()");
         Alarm alarm = Alarm.find(intent.getExtras().getLong("alarm.id"));
-        boolean isStop = intent.getExtras().getBoolean("action.stop"); // TODO Intent.Actionで判定したい
+        boolean isStop = intent.getExtras().getBoolean("action.stop"); // TODO Intent.ACTIONを使ったほうが良い？
         if (isStop) {
-            stopAlarm(alarm);
+            stopAlert(alarm);
         } else {
-            startAlarm(alarm);
+            startAlert(alarm);
         }
         return START_NOT_STICKY;
     }
@@ -55,8 +57,8 @@ public class ProximityAlertService extends Service {
         throw new UnsupportedOperationException();
     }
 
-    private void startAlarm(Alarm alarm) {
-        // TODO foregroundにすることを検討する。
+    private void startAlert(Alarm alarm) {
+        // TODO 勝手にアラートが停止するようなら、foregroundにすることを検討。
         // foregroundにする場合は目的地到着のNotificationもここで行うべきか。
         // APIではonStartCommand()の間はforegroundと定義されているので問題ない
         // はずだが。Vibratorのスレッドまで停止されることがあるかもしれない。
@@ -64,12 +66,14 @@ public class ProximityAlertService extends Service {
         // stopForeground(removeNotification);
         mCondition.close();
         vibrate(alarm);
+        Log.d(TAG, "Started the alert.: " + alarm.dump());
     }
 
-    private void stopAlarm(Alarm alarm) {
+    private void stopAlert(Alarm alarm) {
         mVibrator.cancel();
         mCondition.open();
         mNotificationManager.cancel(alarm.hashCode());
+        Log.d(TAG, "Stoped the alert.: " + alarm.dump());
         stopSelf();
     }
 
@@ -98,7 +102,7 @@ public class ProximityAlertService extends Service {
                 mVibrator.vibrate(pattern, infinite);
                 long timeout =1 * 60 * 1000; // milliseconds
                 boolean isTimeout = !mCondition.block(timeout);
-                stopAlarm(alarm);
+                stopAlert(alarm);
                 if (isTimeout) {
                     showNotification(alarm);
                 }
@@ -106,50 +110,4 @@ public class ProximityAlertService extends Service {
         };
         new Thread(null, task, getClass().getSimpleName()).start();
     }
-
-//////// AsyncTaskを用いた方法。しかし、AsyncTaskはどうやらUIスレッド向けのようだ。
-//  private void startAlarm(int alarmId) {
-//  // TODO foregroundにすることを検討する。
-//  // foregroundにする場合は目的地到着のNotificationもここで行うべきか。
-//  // APIではonStartCommand()の間はforegroundと定義されているので問題ない
-//  // はずだが。Vibratorのスレッドまで停止されることがあるかもしれない。
-//  // startForeground(id, notification);
-//  // stopForeground(removeNotification);
-//  new Task().execute(String.valueOf(alarmId));
-//}
-
-//  private void vibrate(int alarmId) {
-//  long[] pattern = { 0, 200, 500 };
-//  int infinite = 0;
-//  mVibrator.vibrate(pattern, infinite);
-//}
-
-//    // TODO AsyncTaskはUIスレッドのためのクラス？大したことしてないし普通のRunnableで良いかも
-//    // その場合はNotifyingService.javaガ参考になる
-//    private class Task extends AsyncTask<String, Void, Void>
-//    {
-//        @Override
-//        protected void onPreExecute() {
-//            mCondition.close();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... params) {
-//            int alarmId = Integer.valueOf(params[0]);
-//            vibrate(alarmId);
-//            long timeout =1 * 60 * 1000; // milliseconds
-//            boolean isTimeout = !mCondition.block(timeout);
-//            if (isTimeout) {
-//                ProximityAlertService.this.showNotification(alarmId);
-//            }
-//            mVibrator.cancel();
-//            return null;
-//        }
-//
-////        @Override
-////        protected void onPostExecute(Void result) {
-////            mCondition.open(); // TODO stopAlarm()が呼ばれなかった時（停止されなかった）のためにここでもopen()しておくべき
-////            stopSelf();        // →いや、stopAlarm()を呼んでやればいいのか→いや、Notificationは消したらダメだ→stopAlarm();showNotification();で良いのか
-////        }
-//    }
 }

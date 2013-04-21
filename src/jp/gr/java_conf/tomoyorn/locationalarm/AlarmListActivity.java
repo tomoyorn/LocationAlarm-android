@@ -9,7 +9,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,6 +20,11 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
 
+/**
+ * アラーム一覧画面のActivityです。
+ *
+ * @author tomoyorn
+ */
 public class AlarmListActivity extends ListActivity {
 
     private static final String TAG = "AlarmListActivity";
@@ -28,16 +32,9 @@ public class AlarmListActivity extends ListActivity {
     private NotificationManager mNotificationManager;
     private LocationManager mLocationManager;
 
-    // private ListView mAlarmListView;
-    // private ArrayAdapter<Alarm> mAdapter; // TODO
-    // mAdapter,mAlarmsをメンバからはずせないかな
-    // private ArrayList<Alarm> mAlarms = new ArrayList<Alarm>(); // TODO
-    // IDの降順の方が使いやすいかな
-    // private Alarm mSelectedAlarm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("onCreate()");
+        Log.d(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_list);
 
@@ -49,10 +46,9 @@ public class AlarmListActivity extends ListActivity {
 
     @Override
     protected void onResume() {
-        Log.d("onResume()");
+        Log.d(TAG, "onResume()");
         super.onResume();
-        // refresh();
-        setupView();
+        refreshView();
     }
 
     private void setupView() {
@@ -61,7 +57,6 @@ public class AlarmListActivity extends ListActivity {
                 android.R.layout.simple_list_item_activated_1, mAlarms);
         ListView mAlarmListView = getListView();
         setListAdapter(mAdapter);
-        // mAlarmListView.setAdapter(mAdapter);
         mAlarmListView.setItemsCanFocus(false);
 
     }
@@ -72,18 +67,9 @@ public class AlarmListActivity extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("onCreateOptionsMenu()");
+        Log.d(TAG, "onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.alarm_list, menu);
         return true;
-    }
-
-    public Alarm selectedItem() {
-        int selectedItemPosition = getListView().getCheckedItemPosition();
-        if (selectedItemPosition == ListView.INVALID_POSITION) {
-            return null;
-        }
-        Alarm item = (Alarm) getListAdapter().getItem(selectedItemPosition);
-        return item;
     }
 
     @Override
@@ -129,19 +115,28 @@ public class AlarmListActivity extends ListActivity {
             startSettingsActivity();
             return true;
         default:
-            Log.w("Unknown selected menu"); // TODO あり得ないのでアサーションエラーかな？
+            Log.w("Unknown selected menu.");
             return super.onOptionsItemSelected(item);
         }
     }
 
+    public Alarm selectedItem() {
+        int selectedItemPosition = getListView().getCheckedItemPosition();
+        if (selectedItemPosition == ListView.INVALID_POSITION) {
+            return null;
+        }
+        Alarm item = (Alarm) getListAdapter().getItem(selectedItemPosition);
+        return item;
+    }
+
     private void startAlarm(Alarm alarm) {
-        Log.d(TAG, alarm.dump());
         Toast.makeText(
                 this,
                 getString(R.string.message_started_alarm, alarm.getLavel()),
                 Toast.LENGTH_LONG).show();
         showNotification(alarm);
         addProximityAlert(alarm);
+        Log.d(TAG, "Started the alarm.: " + alarm.dump());
     }
 
     @SuppressWarnings("deprecation")
@@ -175,58 +170,17 @@ public class AlarmListActivity extends ListActivity {
         mLocationManager.addProximityAlert(latitude, longitude, radius, noExpiration,
                 PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
-//    private void addProximityAlert(Alarm alarm) {
-//        // TODO 仮実装
-//        double[] shinjyuku = { 35.690921, 139.700258 }; // 新宿駅
-//        double latitude = shinjyuku[0];
-//        double longitude = shinjyuku[1];
-//        float radius = 1 * 1000; // meter
-//        long noExpiration = -1;
-//
-//        Intent intent = new Intent(this, ProximityAlertReceiver.class)
-//                .putExtra("alarm.id", alarm.getId());
-//        mLocationManager.addProximityAlert(latitude, longitude, radius, noExpiration,
-//                PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
-//    }
 
     private boolean existsAlreadyStartedAlarm() {
-        // TODO Auto-generated method stub
+        // TODO 未実装
         return false;
     }
 
     @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d("onListItemClick()");
-        // mSelectedAlarm = (Alarm) mAdapter.getItem(position);
-        // TODO l.getCheckedItemPosition()で毎回取るの手
-        // getListView().setItemChecked(position, true); // TODO 要らないんじゃね？
-
-        // int checkedItemPosition = mAlarmListView.getCheckedItemPosition();
-        // Toast.makeText(this, "checkedItemPosition=" + checkedItemPosition,
-        // Toast.LENGTH_LONG).show();
-        // System.out.println(mAlarmListView.getCheckedItemPosition());
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("onActivityResult()");
-        // Log.i(TAG, "Return PosAlarmBetaActivity: requestCode=" + requestCode
-        // + ", resultCode=" + resultCode);
-
+        Log.d(TAG, "onActivityResult()");
         if (requestCode == DestinationSelectionActivity.REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // String address =
-                // data.getStringExtra(DestinationSelectionActivity.EXTRA_ADDRESS);
-                // int latitudeE6 =
-                // data.getIntExtra(DestinationSelectionActivity.EXTRA_LATITUDE_E6,
-                // 0);
-                // int longitudeE6 =
-                // data.getIntExtra(DestinationSelectionActivity.EXTRA_LONGITUDE_E6,
-                // 0);
-                // TODO
-                // アサーション。座標はInteger.MIN_VALUEでも返すようにしておく。INVALID_LATITUDE_E6とか名前をつけておく
-                // 緯度経度がとりうる値の範囲: 緯度: -90～90, 経度: -180～180
-
                 String address = data.getExtras().getString(
                         DestinationSelectionActivity.EXTRA_ADDRESS);
                 int latitudeE6 = data.getExtras().getInt(
@@ -242,81 +196,13 @@ public class AlarmListActivity extends ListActivity {
                 alarm.setLongitudeE6(longitudeE6);
                 alarm.autoLavel();
                 alarm.save();
-                // // TODO onResumeでやれば必要ないかな
-                // mAlarms.add(alarm);
-                // // mAdapter.notifyDataSetChanged();
-                // refresh(); // TODO アラーム詳細画面から戻った後にonResumeでされるはずなので要らない
-
+                Log.d(TAG, "Created the alarm settings.: " + alarm.dump());
                 startAlarmEditActivity(alarm);
                 refreshView();
-                // String latitudeE6 = data.getStringExtra("latitudeE6");
-                // String longitudeE6 = data.getStringExtra("longitudeE6");
-                // Validate.isTrue(NumberUtils.isNumber(latitudeE6),
-                // "Invalid latitudeE6: " + latitudeE6);
-                // Validate.isTrue(NumberUtils.isNumber(longitudeE6),
-                // "Invalid longitudeE6: " + longitudeE6);
-
-                // 新しいアラームの生成を、この画面で行うか、アラーム詳細設定画面
-                // （または、目的地選択画面）で行うかについて。
-                // この画面で、アラームの削除を行うので、対称性の観点から、生成も
-                // この画面で行うべきと判断
-                // Alarm alarm = createAlarm(Integer.parseInt(latitudeE6),
-                // Integer.parseInt(longitudeE6));
-                // startAlarmDetailActivity(alarm);
             } else if (resultCode == RESULT_CANCELED) {
-                // TODO アラーム設定を削除しないとダメかもね
+                // Do nothing.
             }
         }
-    }
-
-    // protected void onActivityResult(int requestCode, int resultCode, Intent
-    // data) {
-    // super.onActivityResult(requestCode, resultCode, data);
-    // // Log.i(TAG, "Return PosAlarmBetaActivity: requestCode=" + requestCode
-    // // + ", resultCode=" + resultCode);
-    // switch (requestCode) {
-    // // case AlarmDetailActivity.REQUEST_CODE:
-    // // reloadAlarmListView(); // XXX
-    // 冗長になるかもしれないが、このメソッドの最後で必ずリロードするようにしたほうが安全かも
-    // // break;
-    // case DestinationSelectionActivity.REQUEST_CODE:
-    // if (resultCode == RESULT_OK) {
-    // // String latitudeE6 = data.getStringExtra("latitudeE6");
-    // // String longitudeE6 = data.getStringExtra("longitudeE6");
-    // // Validate.isTrue(NumberUtils.isNumber(latitudeE6),
-    // "Invalid latitudeE6: " + latitudeE6);
-    // // Validate.isTrue(NumberUtils.isNumber(longitudeE6),
-    // "Invalid longitudeE6: " + longitudeE6);
-    //
-    // // 新しいアラームの生成を、この画面で行うか、アラーム詳細設定画面
-    // //（または、目的地選択画面）で行うかについて。
-    // // この画面で、アラームの削除を行うので、対称性の観点から、生成も
-    // // この画面で行うべきと判断
-    // // Alarm alarm = createAlarm(Integer.parseInt(latitudeE6),
-    // // Integer.parseInt(longitudeE6));
-    // // startAlarmDetailActivity(alarm);
-    // } else if (resultCode == RESULT_CANCELED) {
-    // // TODO アラーム設定を削除しないとダメかもね
-    // }
-    // break;
-    // default:
-    // throw new AssertionError("requestCode=" + requestCode);
-    // }
-    // }
-
-    // private void deleteAlarm(Alarm alarm) {
-    // // TODO ここもonResume化によって影響を受ける
-    // mAlarms.remove(alarm);
-    // alarm.delete();
-    // mAdapter.notifyDataSetChanged();
-    // }
-    private void deleteAlarm(Alarm alarm) {
-        // TODO 削除されない場合がある。
-        // アラームを追加した後、アラーム一覧画面にもどって何もせずに削除したとき。恐らく selectedAlarmあたりがおかしいのかな
-        alarm.delete();
-        refreshView();
-        // setupView();
-        // refresh();
     }
 
     private void startDestinationSelectionActivity() {
@@ -329,6 +215,12 @@ public class AlarmListActivity extends ListActivity {
         Intent intent = new Intent(this, AlarmEditActivity.class);
         intent.putExtra(AlarmEditActivity.EXTRA_ALARM_ID, alarm.getId());
         startActivity(intent);
+    }
+
+    private void deleteAlarm(Alarm alarm) {
+        alarm.delete();
+        refreshView();
+        Log.d(TAG, "Deleted the alarm settings.: " + alarm.dump());
     }
 
     private void startSettingsActivity() {

@@ -10,18 +10,19 @@ import android.location.LocationManager;
 import android.preference.Preference;
 import android.util.AttributeSet;
 
-import com.activeandroid.Model;
-import com.activeandroid.query.Delete;
-
-import java.util.ArrayList;
-
 import jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertReceiver;
 import jp.gr.java_conf.tomoyorn.locationalarm.R;
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
 
-// TODO SettingsActivityのネストクラスにできないかを検討
-public class RestorePreference extends Preference {
+import java.util.ArrayList;
 
+// TODO SettingsActivityのネストクラスにできないかを検討
+/**
+ * アプリケーションをインストール時の状態に戻すPreferenceです。
+ *
+ * @author tomoyorn
+ */
+public class RestorePreference extends Preference {
 
     private Context mContext;
     private NotificationManager mNotificationManager;
@@ -91,4 +92,3 @@ public class RestorePreference extends Preference {
         }
     }
 }
-

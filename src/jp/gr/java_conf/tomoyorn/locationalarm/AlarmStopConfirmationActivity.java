@@ -10,8 +10,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
+import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
 
+/**
+ * アラーム停止確認画面のActivityです。
+ *
+ * @author tomoyorn
+ *
+ */
 public class AlarmStopConfirmationActivity extends Activity {
+
+    private static final String TAG = "AlarmStopConfirmationActivity";
 
     private NotificationManager mNotificationManager;
     private LocationManager mLocationManager;
@@ -33,6 +42,7 @@ public class AlarmStopConfirmationActivity extends Activity {
         Alarm alarm = Alarm.find(getIntent().getExtras().getLong("alarm.id"));
         cancelNotification(alarm);
         removeProximityAlert(alarm);
+        Log.d(TAG, "Stoped the alarm.: " + alarm.dump());
         finish();
     }
 
