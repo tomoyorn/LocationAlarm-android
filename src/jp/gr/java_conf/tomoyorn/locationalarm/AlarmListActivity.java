@@ -140,7 +140,7 @@ public class AlarmListActivity extends ListActivity {
                 getString(R.string.message_started_alarm, alarm.getLavel()),
                 Toast.LENGTH_LONG).show();
         showNotification(alarm);
-//        addProximityAlert(alarm); // TODO 後で
+        addProximityAlert(alarm);
     }
 
     @SuppressWarnings("deprecation")
@@ -164,10 +164,10 @@ public class AlarmListActivity extends ListActivity {
     }
 
     private void addProximityAlert(Alarm alarm) {
-        double[] shinjyuku = { 35.690921, 139.700258 }; // 新宿駅
-        double latitude = shinjyuku[0];
-        double longitude = shinjyuku[1];
-        float radius = 1 * 1000; // meter
+        // TODO 仮実装
+        double latitude = alarm.getLatitude();
+        double longitude = alarm.getLongitude();
+        float radius = 1 * 1000; // meter // TODO alarmクラスから取得する
         long noExpiration = -1;
 
         Intent intent = new Intent(this, ProximityAlertReceiver.class)
@@ -175,6 +175,19 @@ public class AlarmListActivity extends ListActivity {
         mLocationManager.addProximityAlert(latitude, longitude, radius, noExpiration,
                 PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
+//    private void addProximityAlert(Alarm alarm) {
+//        // TODO 仮実装
+//        double[] shinjyuku = { 35.690921, 139.700258 }; // 新宿駅
+//        double latitude = shinjyuku[0];
+//        double longitude = shinjyuku[1];
+//        float radius = 1 * 1000; // meter
+//        long noExpiration = -1;
+//
+//        Intent intent = new Intent(this, ProximityAlertReceiver.class)
+//                .putExtra("alarm.id", alarm.getId());
+//        mLocationManager.addProximityAlert(latitude, longitude, radius, noExpiration,
+//                PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+//    }
 
     private boolean existsAlreadyStartedAlarm() {
         // TODO Auto-generated method stub

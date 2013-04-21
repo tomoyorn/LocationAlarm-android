@@ -1,8 +1,12 @@
 package jp.gr.java_conf.tomoyorn.locationalarm.preference;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.preference.Preference;
 import android.util.AttributeSet;
 
@@ -11,23 +15,34 @@ import com.activeandroid.query.Delete;
 
 import java.util.ArrayList;
 
+import jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertReceiver;
 import jp.gr.java_conf.tomoyorn.locationalarm.R;
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
 
 // TODO SettingsActivityのネストクラスにできないかを検討
 public class RestorePreference extends Preference {
 
+
+    private Context mContext;
+    private NotificationManager mNotificationManager;
+    private LocationManager mLocationManager;
+
     public RestorePreference(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public RestorePreference(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, android.R.attr.preferenceStyle);
     }
 
     public RestorePreference(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle);
+        mContext = context;
+        mNotificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        mLocationManager = (LocationManager) context
+                .getSystemService(Context.LOCATION_SERVICE);
     }
 
     @Override
@@ -38,7 +53,8 @@ public class RestorePreference extends Preference {
         alert.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO Notificationと近接アラートのクリアも必要か
+                        clearNotification();
+                        clearProximityAlert();
                         clearDatabase();
                         clearPreferences();
                         callChangeListener(null);
@@ -60,4 +76,19 @@ public class RestorePreference extends Preference {
     private void clearPreferences() {
         getSharedPreferences().edit().clear().commit();
     }
+
+    private void clearNotification() {
+        mNotificationManager.cancelAll();
+    }
+
+    private void clearProximityAlert() {
+        ArrayList<Alarm> alarms = Alarm.findAll();
+        for (Alarm alarm : alarms) {
+            Intent intent = new Intent(mContext, ProximityAlertReceiver.class)
+                    .putExtra("alarm.id", alarm.getId());
+            mLocationManager.removeProximityAlert(PendingIntent.getBroadcast(
+                    mContext, 0, intent, 0));
+        }
+    }
 }
+

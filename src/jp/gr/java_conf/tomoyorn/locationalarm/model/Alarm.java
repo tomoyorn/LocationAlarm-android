@@ -5,6 +5,9 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 
 /**
@@ -123,6 +126,27 @@ public class Alarm extends Model {
     public void autoLavel() {
         lavel = (lavel != null) ? lavel
                 : (getLatitude() + ", " + getLongitude());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) { return false; }
+        Alarm rhs = (Alarm) obj;
+        return new EqualsBuilder()
+                      .appendSuper(super.equals(obj))
+                      .append(getTableName(), rhs.getTableName())
+                      .append(getId(), rhs.getId())
+                      .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).
+                append(getId()).
+                append(getTableName()).
+                toHashCode();
     }
 
     @Override
