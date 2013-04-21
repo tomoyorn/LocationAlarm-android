@@ -135,6 +135,7 @@ public class AlarmListActivity extends ListActivity {
     }
 
     private void startAlarm(Alarm alarm) {
+        Log.d(TAG, alarm.dump());
         Toast.makeText(
                 this,
                 getString(R.string.message_started_alarm, alarm.getLavel()),
@@ -164,7 +165,6 @@ public class AlarmListActivity extends ListActivity {
     }
 
     private void addProximityAlert(Alarm alarm) {
-        // TODO 仮実装
         double latitude = alarm.getLatitude();
         double longitude = alarm.getLongitude();
         float radius = 1 * 1000; // meter // TODO alarmクラスから取得する

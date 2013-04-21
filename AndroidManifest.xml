@@ -56,10 +56,10 @@
             android:theme="@android:style/Theme.Dialog" >
         </activity>
 
-        <receiver android:name="jp.gr.java_conf.tomoyorn.sandbox.ProximityAlertReceiver" >
+        <receiver android:name="jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertReceiver" >
         </receiver>
 
-        <service android:name="jp.gr.java_conf.tomoyorn.sandbox.ProximityAlertService" >
+        <service android:name="jp.gr.java_conf.tomoyorn.locationalarm.ProximityAlertService" >
         </service>
     </application>
 

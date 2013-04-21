@@ -153,4 +153,9 @@ public class Alarm extends Model {
     public String toString() {
         return lavel;
     }
+
+    public String dump() {
+        return "Alarm [lavel=" + lavel + ", latitudeE6=" + latitudeE6
+                + ", longitudeE6=" + longitudeE6 + "]";
+    }
 }

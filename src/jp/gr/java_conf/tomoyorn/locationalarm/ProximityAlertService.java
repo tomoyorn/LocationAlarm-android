@@ -11,10 +11,10 @@ import android.os.AsyncTask;
 import android.os.ConditionVariable;
 import android.os.IBinder;
 import android.os.Vibrator;
-import android.util.Log;
 import android.widget.Toast;
 
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
+import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
 
 public class ProximityAlertService extends Service {
 

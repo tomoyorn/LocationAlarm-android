@@ -7,9 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.util.Log;
 
 import jp.gr.java_conf.tomoyorn.locationalarm.model.Alarm;
+import jp.gr.java_conf.tomoyorn.locationalarm.util.Log;
 
 // TODO ProximityAlertServerのネストクラスとして定義することを検討する
 public class ProximityAlertReceiver extends BroadcastReceiver {
