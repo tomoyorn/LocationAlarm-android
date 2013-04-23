@@ -236,15 +236,17 @@ public class AlarmListActivity extends ListActivity {
 
     private int getDefaultDistance() {
         // XXX このクラスが持つメソッドではないような...
-        int defValue = Integer.valueOf(getString(R.string.default_alarm_distance));
-        return PreferenceManager.getDefaultSharedPreferences(this).getInt(
-                SettingsActivity.KEY_ALARM_DISTANCE, defValue);
+        String defValue = getString(R.string.default_alarm_distance);
+        String value = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SettingsActivity.KEY_ALARM_DISTANCE, defValue);
+        return Integer.parseInt(value);
     }
 
     private int getDefaultDuration() {
         // XXX このクラスが持つメソッドではないような...
-        int defValue = Integer.valueOf(getString(R.string.default_alarm_duration));
-        return PreferenceManager.getDefaultSharedPreferences(this).getInt(
-                SettingsActivity.KEY_ALARM_DURATION, defValue);
+        String defValue = getString(R.string.default_alarm_duration);
+        String value = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(SettingsActivity.KEY_ALARM_DURATION, defValue);
+        return Integer.parseInt(value);
     }
 }
